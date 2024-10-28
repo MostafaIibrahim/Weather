@@ -1,0 +1,32 @@
+<resources>
+    <string name="app_name">الطقس</string>
+    <string name="hello_blank_fragment">مرحبا فراجمنت فارغة</string>
+    <string name="feelLike">تبدو</string>
+    <string name="three_hour_details" />
+    <string name="three_hour">تفاصيل ثلاث ساعات</string>
+    <string name="lang">اللغة</string>
+    <string name="arabic">عربية</string>
+    <string name="english">انجليزي</string>
+    <string name="def_ault">النظام</string>
+    <string name="temp">درجة الحرارة</string>
+    <string name="c">سيليزيوس</string>
+    <string name="k">كيلفن</string>
+    <string name="f">فيهرنهايت</string>
+    <string name="wind">سرعة الرياح</string>
+    <string name="metric">م/ثانية</string>
+    <string name="imperial">ميل/الساعة</string>
+    <string name="location">الموقع</string>
+    <string name="map">خريطة</string>
+    <string name="gps">قمر صناعي</string>
+    <string name="degreeC">°س</string>
+    <string name="degreef">°ف</string>
+    <string name="degreek">°ك</string>
+    <string name="sunrise">الشروق</string>
+    <string name="sunset">الغروب</string>
+    <string name="pressure">الضغط جوي</string>
+    <string name="humidity">الرطوبة</string>
+    <string name="dayforcast">متوقع لمدة خمس ايام</string>
+    <string name="locselection">حدد الموقع</string>
+
+
+</resources>
