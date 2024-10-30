@@ -1,14 +1,21 @@
 package com.example.weather.data.repository
 
+import androidx.lifecycle.LiveData
 import com.example.weather.data.CurrentWeather
 import com.example.weather.data.ForcastWeather
+import com.example.weather.data.WeatherDisplayable
 import kotlinx.coroutines.flow.Flow
 
 interface IWeatherRepository {
-    //Here I want to cache data and be able to update or modify
+    suspend fun getDisplayableData(lat: Double, lon: Double):Flow<WeatherDisplayable>
     suspend fun getFrocastRemoteData(lat: Double, lon: Double): Flow<ForcastWeather>
-
     suspend fun getWeatherRemoteData(lat: Double, lon: Double): Flow<CurrentWeather>
+
+    fun getAllFavLocations():Flow<List<WeatherDisplayable>>
+    fun getChachedLocation():Flow<WeatherDisplayable>
+    suspend fun addToFav(FavLocation:WeatherDisplayable)
+    suspend fun deleteFromFav(FavLocation: WeatherDisplayable)
+
     fun saveTempUnit(unit: String)
     fun getTempUnit(): String
     fun saveLocType(type: String)
@@ -17,7 +24,6 @@ interface IWeatherRepository {
     fun getLang(): String
     fun saveWindUnit(unit:String)
     fun getWindUnit():String
-
     fun saveLocationCoord(lon:Double,lat:Double)
     fun getLocationCoord_long():Double
     fun getLocationCoord_lat():Double

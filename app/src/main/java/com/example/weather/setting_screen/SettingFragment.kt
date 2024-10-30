@@ -11,6 +11,8 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.lifecycle.ViewModelProvider
 import com.example.weather.R
+import com.example.weather.data.db.WeatherDataBase
+import com.example.weather.data.db.WeatherLocalDataSource
 import com.example.weather.data.repository.WeatherRepository
 import com.example.weather.data.remote_network.WeatherRemoteDataSource
 import com.example.weather.databinding.FragmentSettingBinding
@@ -54,7 +56,8 @@ class SettingFragment : Fragment() {
         super.onViewCreated(view, savedInstanceState)
         settingViewModelFactory = SettingViewModelFactory(
             WeatherRepository.getRepository(WeatherRemoteDataSource,
-            SettingsPreferencesHelper(requireContext())
+            SettingsPreferencesHelper(requireContext()),
+                WeatherLocalDataSource.getInstance(WeatherDataBase.getInstance(requireContext()).getWeatherDao())
         ))
         settingViewModel = ViewModelProvider(this,settingViewModelFactory).get(SettingViewModel::class.java)
 

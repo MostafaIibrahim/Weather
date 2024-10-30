@@ -4,22 +4,25 @@ import android.content.Context
 import androidx.room.Database
 import androidx.room.Room
 import androidx.room.RoomDatabase
+import androidx.room.TypeConverters
+import com.example.weather.data.WeatherDisplayable
 
-/*
-@Database(entities = arrayOf(Product::class), version = 2)
+
+@Database(entities = arrayOf(WeatherDisplayable::class), version = 1)
+@TypeConverters(Converters::class)
 abstract class WeatherDataBase: RoomDatabase() {
-    abstract fun getProductDao():ProductDao
+    abstract fun getWeatherDao():WeatherDAO
     companion object{
         @Volatile
-        private var INSTANCE:ProductDataBase? = null
-        fun getInstance(ctx: Context):ProductDataBase{
+        private var INSTANCE:WeatherDataBase? = null
+        fun getInstance(ctx: Context):WeatherDataBase{
             return INSTANCE ?: synchronized(this){
-                val instance:ProductDataBase = Room.databaseBuilder(
-                    ctx.applicationContext,ProductDataBase::class.java,"product_db")
+                val instance:WeatherDataBase = Room.databaseBuilder(
+                    ctx.applicationContext,WeatherDataBase::class.java,"weatherLoc")
                     .fallbackToDestructiveMigration()
                     .build()
                 INSTANCE = instance
                 instance }
         }
     }
-}*/
+}

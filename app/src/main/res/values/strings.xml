@@ -13,7 +13,7 @@
     <string name="k">Kelvin</string>
     <string name="f">Fahrenheit</string>
     <string name="wind">Wind</string>
-    <string name="metric">meter/sec</string>
+    <string name="metric">m/sec</string>
     <string name="imperial">mile/hour</string>
     <string name="location">Location</string>
     <string name="map">Map</string>

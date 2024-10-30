@@ -1,5 +1,6 @@
 package com.example.weather.home_screen
 
+import android.app.Activity
 import android.content.Context
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
@@ -15,12 +16,11 @@ import kotlinx.coroutines.flow.catch
 import kotlinx.coroutines.launch
 
 class HomeViewModel(var weatherRepository: WeatherRepository):ViewModel(),CallBackForGPSCoord{
-    private var _forcastStateFlow= MutableStateFlow<ResaultStatus>(ResaultStatus.Loading)
-    var forcastStateFlow:StateFlow<ResaultStatus> = _forcastStateFlow
+    private var _StateFlow= MutableStateFlow<ResaultStatus>(ResaultStatus.Loading)
+    var stateFlow:StateFlow<ResaultStatus> = _StateFlow
 
 
-    fun onHomeScreenStart(context:Context) {
-        var activity =MainActivity()
+    fun onHomeScreenStart(activity: Activity,context:Context) {
         val locationHelper= LocationHelper(context)
         when (weatherRepository.getLocType()) {
             "GPS" -> {
@@ -34,12 +34,12 @@ class HomeViewModel(var weatherRepository: WeatherRepository):ViewModel(),CallBa
 
 
     fun getFetchedData(lat:Double,lon:Double)
-    = viewModelScope.launch(Dispatchers.IO){
-        weatherRepository.getFrocastRemoteData(lat,lon)
+    = viewModelScope.launch(){
+        weatherRepository.getDisplayableData(lat,lon)
             .catch { error ->
-                _forcastStateFlow.value =  ResaultStatus.Failure(error)  }
+                _StateFlow.value =  ResaultStatus.Failure(error)  }
             .collect{ data ->
-                _forcastStateFlow.value = ResaultStatus.Success(data)
+                _StateFlow.value = ResaultStatus.Success(data)
             }
     }
 
