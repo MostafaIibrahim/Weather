@@ -7,6 +7,6 @@
     <color name="colorAccent">#03DAC5</color>
     <color name="morning_card_bg">#E0E7EF</color>
     <color name="night_card_bg">#1E2A45</color>
-    <color name="text_on_light">#333333</color>
+        <color name="text_on_light">#333333</color>
     <color name="text_on_dark">#FFFFFF</color>
 </resources>

@@ -1,5 +1,6 @@
 package com.example.weather.data.repository
 
+import com.example.weather.data.Alarm
 import com.example.weather.data.CurrentWeather
 import com.example.weather.data.ForcastWeather
 import com.example.weather.data.WeatherDisplayable
@@ -66,10 +67,6 @@ class WeatherRepository(
             //return weatherLocalSource.getCountry()
         }*/
 
-
-
-
-
     //Here I want to cache data and be able to update or modify
     override suspend fun getFrocastRemoteData(lat:Double, lon:Double): Flow<ForcastWeather> {
         println("Before fetching directly $lat,$lon,${getTempUnit()},${getLang()}")
@@ -88,17 +85,19 @@ class WeatherRepository(
         //Should I getData from at viewModel or here? I think here but we will leave it for now
     }
 
-    override suspend fun addToFav(favLocation: WeatherDisplayable): Unit = coroutineScope {
-        launch(ioDispatcher) {
+    override suspend fun addToFav(favLocation: WeatherDisplayable) {
             weatherLocalDataSource.addLocation(favLocation)
-        }
     }
 
-    override suspend fun deleteFromFav(favLocation: WeatherDisplayable) : Unit = coroutineScope {
-        launch(ioDispatcher) {
+    override suspend fun deleteFromFav(favLocation: WeatherDisplayable){
             weatherLocalDataSource.deleteLocation(favLocation)
-        }
     }
+
+    override fun getAllAlarms(): Flow<List<Alarm>> = weatherLocalDataSource.getAllAlarms()
+
+    override suspend fun insertAlarm(alarm: Alarm) { weatherLocalDataSource.insertAlarm(alarm) }
+
+    override suspend fun deleteAlarm(alarm: Alarm) { weatherLocalDataSource.deleteAlarm(alarm) }
 
     override fun saveTempUnit(unit:String){ settingsPreferences.saveTempUnit(unit) }
     override fun getTempUnit():String {

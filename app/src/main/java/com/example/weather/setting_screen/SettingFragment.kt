@@ -35,13 +35,6 @@ class SettingFragment : Fragment() {
     private var savedTempUnit:String = ""
     private var savedWindSpeedUnit:String = ""
 
-    override fun onStart() {
-        super.onStart()
-
-    }
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
-    }
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -57,7 +50,8 @@ class SettingFragment : Fragment() {
         settingViewModelFactory = SettingViewModelFactory(
             WeatherRepository.getRepository(WeatherRemoteDataSource,
             SettingsPreferencesHelper(requireContext()),
-                WeatherLocalDataSource.getInstance(WeatherDataBase.getInstance(requireContext()).getWeatherDao())
+                WeatherLocalDataSource.getInstance(WeatherDataBase.getInstance(requireContext()).getWeatherDao(),
+                    WeatherDataBase.getInstance(requireContext()).getAlarmDao() )
         ))
         settingViewModel = ViewModelProvider(this,settingViewModelFactory).get(SettingViewModel::class.java)
 

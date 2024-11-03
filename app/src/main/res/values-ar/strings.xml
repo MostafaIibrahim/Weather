@@ -27,6 +27,22 @@
     <string name="humidity">الرطوبة</string>
     <string name="dayforcast">متوقع لمدة خمس ايام</string>
     <string name="locselection">حدد الموقع</string>
+    <string name="remove_favorite_place_button">حذف المكان المفضل</string>
+    <string name="alert_configuration">اختار اعدادات المنبة</string>
+    <string name="set_duration">اختار المدة</string>
+    <string name="set_date">اختار التاريخ</string>
+    <string name="notify_me">اختار نوع التنبية</string>
+    <string name="alerm">المنبة</string>
+    <string name="notification">الاشعارات</string>
+    <string name="save">حفظ</string>
+    <string name="cancel">الغاء</string>
+
+
+
+
+
+
+
 
 
 </resources>

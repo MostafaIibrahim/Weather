@@ -62,7 +62,8 @@ class HomeFragment : Fragment(),CallBackForGPSCoord{
         homeFactory = HomeViewModelFactory(
             WeatherRepository.getRepository(WeatherRemoteDataSource,
                 SettingsPreferencesHelper(requireContext()),
-                WeatherLocalDataSource.getInstance(WeatherDataBase.getInstance(requireContext()).getWeatherDao())
+                WeatherLocalDataSource.getInstance(WeatherDataBase.getInstance(requireContext()).getWeatherDao(),
+                    WeatherDataBase.getInstance(requireContext()).getAlarmDao() )
             ))
         viewModel = ViewModelProvider(this,homeFactory).get(HomeViewModel::class.java)
 //        viewModel.getFetchedData(30.0709887,31.0215654)

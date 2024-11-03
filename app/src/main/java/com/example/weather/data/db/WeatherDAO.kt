@@ -22,4 +22,6 @@ interface WeatherDAO {
 
     @Delete
     suspend fun deleteLocation(location: WeatherDisplayable)
+
+
 }

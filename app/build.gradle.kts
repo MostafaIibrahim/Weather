@@ -2,6 +2,7 @@ plugins {
     id("com.android.application")
     id("org.jetbrains.kotlin.android")
     id ("kotlin-kapt")
+    alias(libs.plugins.google.android.libraries.mapsplatform.secrets.gradle.plugin)
 }
 
 android {
@@ -42,12 +43,18 @@ android {
 }
 
 dependencies {
+    testImplementation ("androidx.test:core-ktx:1.1.5")
+    testImplementation ("androidx.test.ext:junit-ktx:1.1.5")
+    testImplementation ("org.robolectric:robolectric:4.8")
+    implementation ("com.airbnb.android:lottie:6.5.2")
     //for map openStreetMap
     implementation ("org.osmdroid:osmdroid-android:6.1.10")
     //------------------
-    implementation("androidx.lifecycle:lifecycle-runtime-ktx:2.8.6")
+        implementation("androidx.lifecycle:lifecycle-runtime-ktx:2.8.6")
     implementation ("androidx.lifecycle:lifecycle-livedata-ktx:2.6.0")
     implementation(libs.play.services.location)
+    implementation(libs.play.services.maps)
+    implementation(libs.androidx.compose.material.core) //search
     //Room
     kapt ("androidx.room:room-compiler:2.6.1")
     implementation ("androidx.room:room-runtime:2.6.1")
