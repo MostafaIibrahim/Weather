@@ -34,20 +34,40 @@ class HomeFragment : Fragment(),CallBackForGPSCoord{
     lateinit var responseObj:WeatherDisplayable
     private lateinit var hourlyAdapter: HourlyAdapter
     private lateinit var dailyAdapter: DailyAdapter
+    private lateinit var settingsPreferencesHelper: SettingsPreferencesHelper
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         //fetch data
+        settingsPreferencesHelper = SettingsPreferencesHelper(requireContext())
 
     }
 
     override fun onStart() {
         super.onStart()
-        val locationHelper= LocationHelper(requireContext())
-        locationHelper.getActualLocation(requireActivity(),this)
-
-//        viewModel.onHomeScreenStart(requireActivity(),requireContext())
+        decideLocationSourceAndFetchData()
     }
 
+
+    private fun decideLocationSourceAndFetchData() {
+        // Check if user preference is to use GPS or specific location
+        if (settingsPreferencesHelper.getLocType() == "gps") {
+            // Use GPS location
+            val locationHelper = LocationHelper(requireContext())
+            locationHelper.getActualLocation(requireActivity(), this)
+        } else {
+            // Use manually selected location
+            val latitude = settingsPreferencesHelper.latitude
+            val longitude = settingsPreferencesHelper.longitude
+            if (latitude != null && longitude != null) {
+                // Fetch data based on saved location
+                viewModel.getFetchedData(latitude, longitude)
+            } else {
+                println("Saved location not found, fallback to GPS.")
+                val locationHelper = LocationHelper(requireContext())
+                locationHelper.getActualLocation(requireActivity(), this)
+            }
+        }
+    }
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
@@ -75,37 +95,40 @@ class HomeFragment : Fragment(),CallBackForGPSCoord{
                     }
                     is ResaultStatus.Success -> {
                         responseObj = it.data
-                        binding.apply {
-                            address.text = responseObj.location
-                            time.text = responseObj.currentTime
-                            date.text = responseObj.currentDay
-                            Glide.with(requireContext())
-                                .load("https://openweathermap.org/img/wn/${responseObj.weatherIconUrl}@2x.png")
-                                .diskCacheStrategy(DiskCacheStrategy.ALL) // Cache all versions of the image
-                                .into(currentImg)
-                            status.text = responseObj.weatherDescription
-                            temp.text = responseObj.temperature
-                            degreeTxt.text = responseObj.tempUnit
-                            minTemp.text = responseObj.currentMinTemp+ "°"
-                            maxTemp.text = responseObj.currentMaxTemp+ "°"
-                            feelLike.text = responseObj.feelLike + "°"
-                            sunrise.text = responseObj.sunrise
-                            sunset.text = responseObj.sunset
-                            wind.text = responseObj.windSpeed + responseObj.speedUnit
-                            pressure.text = responseObj.pressure + "hpa"
-                            humidity.text = responseObj.humidity + "%"
-                            cloud.text = responseObj.cloudCoverage
-                            setupHourlyAdapterList(responseObj.hourlyForecast)
-                            setupDailyAdapterList(responseObj.dailyForecast)
-                        }
+                        updateUI()
                     }
                     is ResaultStatus.Loading -> {
-
+                        //Show loading bar
                     }
 
                     else -> {}
                 }
             }
+        }
+    }
+    private fun updateUI(){
+        binding.apply {
+            address.text = responseObj.location
+            time.text = responseObj.currentTime
+            date.text = responseObj.currentDay
+            Glide.with(requireContext())
+                .load("https://openweathermap.org/img/wn/${responseObj.weatherIconUrl}@2x.png")
+                .diskCacheStrategy(DiskCacheStrategy.ALL) // Cache all versions of the image
+                .into(currentImg)
+            status.text = responseObj.weatherDescription
+            temp.text = responseObj.temperature
+            degreeTxt.text = responseObj.tempUnit
+            minTemp.text = responseObj.currentMinTemp+ "°"
+            maxTemp.text = responseObj.currentMaxTemp+ "°"
+            feelLike.text = responseObj.feelLike + "°"
+            sunrise.text = responseObj.sunrise
+            sunset.text = responseObj.sunset
+            wind.text = responseObj.windSpeed + responseObj.speedUnit
+            pressure.text = responseObj.pressure + "hpa"
+            humidity.text = responseObj.humidity + "%"
+            cloud.text = responseObj.cloudCoverage
+            setupHourlyAdapterList(responseObj.hourlyForecast)
+            setupDailyAdapterList(responseObj.dailyForecast)
         }
     }
 
@@ -128,7 +151,6 @@ class HomeFragment : Fragment(),CallBackForGPSCoord{
 
     override fun onLocationResult(latitude: Double, longitude: Double) {
         viewModel.getFetchedData(latitude,latitude)
-
     }
 
 }

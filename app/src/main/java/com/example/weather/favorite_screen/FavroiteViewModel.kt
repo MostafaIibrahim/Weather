@@ -3,8 +3,8 @@ package com.example.weather.favorite_screen
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.viewModelScope
-import com.example.weather.data.ResaultStatus
 import com.example.weather.data.WeatherDisplayable
+import com.example.weather.data.repository.IWeatherRepository
 import com.example.weather.data.repository.WeatherRepository
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -12,7 +12,7 @@ import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.catch
 import kotlinx.coroutines.launch
 
-class FavroiteViewModel(val repo:WeatherRepository):ViewModel() {
+class FavroiteViewModel(val repo: IWeatherRepository):ViewModel() {
     private var _ListDataFlow= MutableStateFlow<List<WeatherDisplayable>>(emptyList())
     var listDataFlow: StateFlow<List<WeatherDisplayable>> = _ListDataFlow
 
@@ -26,7 +26,7 @@ class FavroiteViewModel(val repo:WeatherRepository):ViewModel() {
                 _ListDataFlow.value = it
             }
     }
-    private fun insertLocation(location:WeatherDisplayable){ viewModelScope.launch { repo.addToFav(location) } }
+    fun insertLocation(location:WeatherDisplayable){ viewModelScope.launch { repo.addToFav(location) } }
 
     fun deleteLocation(location: WeatherDisplayable){ viewModelScope.launch { repo.deleteFromFav(location) }}
 

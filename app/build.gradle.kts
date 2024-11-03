@@ -43,9 +43,26 @@ android {
 }
 
 dependencies {
-    testImplementation ("androidx.test:core-ktx:1.1.5")
-    testImplementation ("androidx.test.ext:junit-ktx:1.1.5")
-    testImplementation ("org.robolectric:robolectric:4.8")
+    /**
+     *  Testing dependencies
+     * */
+    // hamcrest
+    testImplementation("org.hamcrest:hamcrest-all:1.3")
+    // Junit
+    testImplementation("junit:junit:4.13.2")
+    // Coroutines test dependencies
+    testImplementation("org.jetbrains.kotlinx:kotlinx-coroutines-test:1.5.2")
+    // Robolectric
+    testImplementation("org.robolectric:robolectric:4.12")
+    testImplementation("org.junit.jupiter:junit-jupiter:5.8.1")
+
+    testImplementation("androidx.test.ext:junit-ktx:1.1.5")
+    testImplementation("androidx.test:core-ktx:1.5.0")
+    testImplementation("androidx.arch.core:core-testing:2.2.0")
+
+    // AndroidX Test - Instrumented testing
+    androidTestImplementation("androidx.arch.core:core-testing:2.2.0")
+    androidTestImplementation("org.jetbrains.kotlinx:kotlinx-coroutines-test:1.5.2")
     implementation ("com.airbnb.android:lottie:6.5.2")
     //for map openStreetMap
     implementation ("org.osmdroid:osmdroid-android:6.1.10")

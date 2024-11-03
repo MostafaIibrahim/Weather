@@ -18,19 +18,18 @@ import kotlinx.coroutines.launch
 class HomeViewModel(var weatherRepository: WeatherRepository):ViewModel(),CallBackForGPSCoord{
     private var _StateFlow= MutableStateFlow<ResaultStatus>(ResaultStatus.Loading)
     var stateFlow:StateFlow<ResaultStatus> = _StateFlow
+    private var hasLoadedData = false
 
-
-    fun onHomeScreenStart(activity: Activity,context:Context) {
-        val locationHelper= LocationHelper(context)
-        when (weatherRepository.getLocType()) {
-            "GPS" -> {
-               locationHelper.getActualLocation(activity,this)
-            }
-            "Map" -> {
-                getFetchedData(weatherRepository.getLocationCoord_lat(),weatherRepository.getLocationCoord_long())
+    fun onHomeScreenStart(activity: Activity, context: Context) {
+        if (!hasLoadedData) {
+            hasLoadedData = true
+            val locationHelper = LocationHelper(context)
+            when (weatherRepository.getLocType()) {
+                "GPS" -> locationHelper.getActualLocation(activity, this)
+                "Map" -> getFetchedData(weatherRepository.getLocationCoord_lat(), weatherRepository.getLocationCoord_long())
             }
         }
-     }
+    }
 
 
     fun getFetchedData(lat:Double,lon:Double)

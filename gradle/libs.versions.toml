@@ -1,5 +1,6 @@
 [versions]
 agp = "8.6.0"
+junitKtx = "1.5.0"
 kotlin = "1.9.0"
 coreKtx = "1.13.1"
 junit = "4.13.2"
@@ -14,8 +15,10 @@ playServicesLocation = "21.3.0"
 googleAndroidLibrariesMapsplatformSecretsGradlePlugin = "2.0.1"
 playServicesMaps = "19.0.0"
 composeMaterialCore = "1.4.0"
+junitKtxVersion = "1.2.1"
 [libraries]
 androidx-core-ktx = { group = "androidx.core", name = "core-ktx", version.ref = "coreKtx" }
+androidx-junit-ktx = { module = "androidx.test.ext:junit-ktx", version.ref = "junitKtx" }
 junit = { group = "junit", name = "junit", version.ref = "junit" }
 androidx-junit = { group = "androidx.test.ext", name = "junit", version.ref = "junitVersion" }
 androidx-espresso-core = { group = "androidx.test.espresso", name = "espresso-core", version.ref = "espressoCore" }
@@ -27,6 +30,7 @@ androidx-work-runtime-ktx = { group = "androidx.work", name = "work-runtime-ktx"
 play-services-location = { group = "com.google.android.gms", name = "play-services-location", version.ref = "playServicesLocation" }
 play-services-maps = { group = "com.google.android.gms", name = "play-services-maps", version.ref = "playServicesMaps" }
 androidx-compose-material-core = { group = "androidx.wear.compose", name = "compose-material-core", version.ref = "composeMaterialCore" }
+junit-ktx = { group = "androidx.test.ext", name = "junit-ktx", version.ref = "junitKtxVersion" }
 
 [plugins]
 android-application = { id = "com.android.application", version.ref = "agp" }
