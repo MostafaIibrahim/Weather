@@ -33,7 +33,7 @@ class HomeViewModel(var weatherRepository: WeatherRepository):ViewModel(),CallBa
 
 
     fun getFetchedData(lat:Double,lon:Double)
-    = viewModelScope.launch(){
+            = viewModelScope.launch(){
         weatherRepository.getDisplayableData(lat,lon)
             .catch { error ->
                 _StateFlow.value =  ResaultStatus.Failure(error)  }

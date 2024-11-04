@@ -59,6 +59,9 @@ class MainActivity : AppCompatActivity() {
             true
         }
     }
+    fun bottomNavFav( itemId:Int){
+        binding.bottomNavView.selectedItemId = itemId
+    }
 
     override fun onSaveInstanceState(outState: Bundle) {
         super.onSaveInstanceState(outState)

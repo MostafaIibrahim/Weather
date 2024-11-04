@@ -3,13 +3,16 @@ package com.example.weather.favorite_screen
 import android.content.Context
 import android.view.LayoutInflater
 import android.view.ViewGroup
+import android.widget.Toast
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
 import com.example.weather.data.WeatherDisplayable
 import com.example.weather.databinding.FavoriteCardBinding
 
-class FavoriteListAdapter(private val listener: (WeatherDisplayable) -> Unit):
+class FavoriteListAdapter(
+    private val onItemClicked: (WeatherDisplayable) -> Unit,
+    private val onDeleteClick: (WeatherDisplayable) -> Unit):
     ListAdapter<WeatherDisplayable, FavoriteListAdapter.viewHolder>(MyDiffUtilFavoriteListAdapter()){
         class viewHolder(var binding:FavoriteCardBinding):RecyclerView.ViewHolder(binding.root)
 
@@ -25,7 +28,10 @@ class FavoriteListAdapter(private val listener: (WeatherDisplayable) -> Unit):
         holder.binding.apply {
             placeNameText.text = currentObject.location
             deleteBtn.setOnClickListener{
-                listener.invoke(currentObject)
+                onDeleteClick.invoke(currentObject)
+            }
+            cardId.setOnClickListener{
+                onItemClicked.invoke(currentObject)
             }
         }
     }

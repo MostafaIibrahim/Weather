@@ -15,7 +15,6 @@ import com.example.weather.data.ResaultStatus
 import com.example.weather.data.WeatherDisplayable
 import com.example.weather.data.repository.WeatherRepository
 import com.example.weather.data.remote_network.WeatherRemoteDataSource
-import com.example.weather.data.util_pojo.Weather
 import com.example.weather.databinding.FragmentHomeBinding
 import com.example.weather.util.LocationHelper
 import com.example.weather.util.SettingsPreferencesHelper
@@ -23,6 +22,7 @@ import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.launch
 import com.example.weather.data.db.WeatherDataBase
 import com.example.weather.data.db.WeatherLocalDataSource
+import com.example.weather.favorite_screen.SharedHomeViewModel
 
 //I need to adjust home screening because it's a big mass
 //I need to use current weather API too
@@ -31,15 +31,15 @@ class HomeFragment : Fragment(),CallBackForGPSCoord{
     lateinit var homeFactory:HomeViewModelFactory
     lateinit var binding:FragmentHomeBinding
     lateinit var viewModel: HomeViewModel
-    lateinit var responseObj:WeatherDisplayable
     private lateinit var hourlyAdapter: HourlyAdapter
     private lateinit var dailyAdapter: DailyAdapter
     private lateinit var settingsPreferencesHelper: SettingsPreferencesHelper
+    private lateinit var sharedViewModel: SharedHomeViewModel
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         //fetch data
         settingsPreferencesHelper = SettingsPreferencesHelper(requireContext())
-
+        sharedViewModel = ViewModelProvider(requireActivity()).get(SharedHomeViewModel::class.java)
     }
 
     override fun onStart() {
@@ -47,27 +47,6 @@ class HomeFragment : Fragment(),CallBackForGPSCoord{
         decideLocationSourceAndFetchData()
     }
 
-
-    private fun decideLocationSourceAndFetchData() {
-        // Check if user preference is to use GPS or specific location
-        if (settingsPreferencesHelper.getLocType() == "gps") {
-            // Use GPS location
-            val locationHelper = LocationHelper(requireContext())
-            locationHelper.getActualLocation(requireActivity(), this)
-        } else {
-            // Use manually selected location
-            val latitude = settingsPreferencesHelper.latitude
-            val longitude = settingsPreferencesHelper.longitude
-            if (latitude != null && longitude != null) {
-                // Fetch data based on saved location
-                viewModel.getFetchedData(latitude, longitude)
-            } else {
-                println("Saved location not found, fallback to GPS.")
-                val locationHelper = LocationHelper(requireContext())
-                locationHelper.getActualLocation(requireActivity(), this)
-            }
-        }
-    }
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
@@ -87,6 +66,8 @@ class HomeFragment : Fragment(),CallBackForGPSCoord{
             ))
         viewModel = ViewModelProvider(this,homeFactory).get(HomeViewModel::class.java)
 //        viewModel.getFetchedData(30.0709887,31.0215654)
+
+        observeFavDisplaying()
         lifecycleScope.launch {
             viewModel.stateFlow.collectLatest {
                 when(it){
@@ -94,8 +75,8 @@ class HomeFragment : Fragment(),CallBackForGPSCoord{
                         println("Failed")
                     }
                     is ResaultStatus.Success -> {
-                        responseObj = it.data
-                        updateUI()
+                        var responseObj = it.data
+                        updateUI(responseObj)
                     }
                     is ResaultStatus.Loading -> {
                         //Show loading bar
@@ -106,13 +87,46 @@ class HomeFragment : Fragment(),CallBackForGPSCoord{
             }
         }
     }
-    private fun updateUI(){
+    private fun observeFavDisplaying(){
+        lifecycleScope.launchWhenStarted {
+            sharedViewModel.selectedLocation.collectLatest { favoriteLocation ->
+                favoriteLocation?.let {
+                    // Update UI with favorite location data
+                    updateUI(it)
+                    // Clear the selected location after displaying it
+                    sharedViewModel.setSelectedLocation(null)
+                }
+            }
+        }
+    }
+    private fun decideLocationSourceAndFetchData() {
+        // Check if a favorite location is set
+        if (sharedViewModel.selectedLocation.value == null) {
+            // No favorite location selected, proceed with GPS or saved location
+            if (settingsPreferencesHelper.getLocType() == "gps") {
+                val locationHelper = LocationHelper(requireContext())
+                locationHelper.getActualLocation(requireActivity(), this)
+            } else {
+                val latitude = settingsPreferencesHelper.latitude
+                val longitude = settingsPreferencesHelper.longitude
+                if (latitude != null && longitude != null) {
+                    viewModel.getFetchedData(latitude, longitude)
+                } else {
+                    println("Saved location not found, fallback to GPS.")
+                    val locationHelper = LocationHelper(requireContext())
+                    locationHelper.getActualLocation(requireActivity(), this)
+                }
+            }
+        }
+    }
+    private fun updateUI(responseObj:WeatherDisplayable){
         binding.apply {
             address.text = responseObj.location
             time.text = responseObj.currentTime
             date.text = responseObj.currentDay
             Glide.with(requireContext())
                 .load("https://openweathermap.org/img/wn/${responseObj.weatherIconUrl}@2x.png")
+                .override(400, 400)
                 .diskCacheStrategy(DiskCacheStrategy.ALL) // Cache all versions of the image
                 .into(currentImg)
             status.text = responseObj.weatherDescription

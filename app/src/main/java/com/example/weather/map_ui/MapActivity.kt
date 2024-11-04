@@ -30,7 +30,7 @@ class MapActivity : AppCompatActivity() {
         Configuration.getInstance().load(applicationContext, applicationContext.getSharedPreferences("osmdroid", MODE_PRIVATE))
         binding.map.apply {
             setMultiTouchControls(true)
-            controller.setZoom(15.0)
+            controller.setZoom(12.0)
             controller.setCenter(GeoPoint(settingPreference.latitude,settingPreference.longitude))
         }
         marker = Marker(binding.map)
