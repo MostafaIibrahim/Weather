@@ -9,4 +9,7 @@
     <color name="night_card_bg">#1E2A45</color>
         <color name="text_on_light">#333333</color>
     <color name="text_on_dark">#FFFFFF</color>
+    <color name="gray">#808080</color>
+    <color name="red">#FF0000</color>
+
 </resources>

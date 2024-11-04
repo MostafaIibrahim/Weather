@@ -64,7 +64,7 @@ class FavoriteFragment : Fragment() {
 
     }
     private fun setupFavAdapter() {
-        favAdapter = FavoriteListAdapter(
+        favAdapter = FavoriteListAdapter( requireContext(),
             onItemClicked = { selectedLocation ->
                 // Update shared ViewModel with selected location’s coordinates
                 sharedViewModel.setSelectedLocation(selectedLocation)

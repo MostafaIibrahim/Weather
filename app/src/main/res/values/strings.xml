@@ -36,5 +36,6 @@
     <string name="notification">Notification</string>
     <string name="save">Save</string>
     <string name="cancel">Cancel</string>
+    <string name="favscreen">Favorite Locations</string>
 
 </resources>
