@@ -37,6 +37,10 @@
     <string name="save">حفظ</string>
     <string name="cancel">الغاء</string>
     <string name="favscreen">الاماكن المفضلة</string>
+    <string name="alarmlocation">الموقع:</string>
+    <string name="alarmtime">التوقيت:</string>
+    <string name="alarmdate">التاريخ:</string>
+    <string name="notificationtype">ألاشعار:</string>
 
 
 

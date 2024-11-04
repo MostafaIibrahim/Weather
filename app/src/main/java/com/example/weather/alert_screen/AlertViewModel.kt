@@ -6,10 +6,9 @@ import androidx.lifecycle.viewModelScope
 import com.example.weather.data.Alarm
 import com.example.weather.data.repository.WeatherRepository
 import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.MutableStateFlow
-import kotlinx.coroutines.flow.SharedFlow
 import kotlinx.coroutines.flow.StateFlow
+import kotlinx.coroutines.flow.catch
 import kotlinx.coroutines.launch
 
 class AlertViewModel(val repo: WeatherRepository):ViewModel() {
@@ -19,6 +18,12 @@ class AlertViewModel(val repo: WeatherRepository):ViewModel() {
 
     init {
 
+    }
+    fun getAllAlerms()= viewModelScope.launch(Dispatchers.IO) {
+        repo.getAllAlarms().catch { println("Error ya walla") }
+            .collect {
+                _alarmList.value = it
+            }
     }
     //Add functions to handle:
     fun getLatAndLong():Pair<Double,Double> = Pair(repo.getLocationCoord_long(),repo.getLocationCoord_lat() )

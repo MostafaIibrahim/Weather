@@ -16,6 +16,7 @@ googleAndroidLibrariesMapsplatformSecretsGradlePlugin = "2.0.1"
 playServicesMaps = "19.0.0"
 composeMaterialCore = "1.4.0"
 junitKtxVersion = "1.2.1"
+junitJupiter = "5.8.1"
 [libraries]
 androidx-core-ktx = { group = "androidx.core", name = "core-ktx", version.ref = "coreKtx" }
 androidx-junit-ktx = { module = "androidx.test.ext:junit-ktx", version.ref = "junitKtx" }
@@ -31,6 +32,7 @@ play-services-location = { group = "com.google.android.gms", name = "play-servic
 play-services-maps = { group = "com.google.android.gms", name = "play-services-maps", version.ref = "playServicesMaps" }
 androidx-compose-material-core = { group = "androidx.wear.compose", name = "compose-material-core", version.ref = "composeMaterialCore" }
 junit-ktx = { group = "androidx.test.ext", name = "junit-ktx", version.ref = "junitKtxVersion" }
+junit-jupiter = { group = "org.junit.jupiter", name = "junit-jupiter", version.ref = "junitJupiter" }
 
 [plugins]
 android-application = { id = "com.android.application", version.ref = "agp" }

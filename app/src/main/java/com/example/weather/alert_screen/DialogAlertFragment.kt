@@ -28,6 +28,7 @@ import java.util.Calendar
 import java.util.Locale
 import android.Manifest
 import android.annotation.SuppressLint
+import android.content.DialogInterface
 import android.widget.Toast
 
 class   DialogAlertFragment : DialogFragment() {
@@ -70,7 +71,6 @@ class   DialogAlertFragment : DialogFragment() {
         super.onViewCreated(view, savedInstanceState)
         dialogBinder.apply {
             startDuration.setOnClickListener { showTimePicker() }
-//            setDate.setOnClickListener { showDatePicker() }
 
             notifyOptions.setOnCheckedChangeListener { _, checkedId ->
                 notificationType = if (checkedId == R.id.notification_config) "Notification" else "Alarm"
@@ -81,11 +81,18 @@ class   DialogAlertFragment : DialogFragment() {
                     R.id.choose_location -> navigateToMapForLocation()
                 }
             }
-            saveButton.setOnClickListener { saveAlertConfig() }
-            cancelButton.setOnClickListener { requireActivity().onBackPressedDispatcher.onBackPressed() }
+            saveButton.setOnClickListener {
+                saveAlertConfig()
+                (parentFragment as? AlertFragment)?.hideDialogFragment()
+            }
+            cancelButton.setOnClickListener {
+                (parentFragment as? AlertFragment)?.hideDialogFragment()
+            }
         }
     }
-
+    override fun onDismiss(dialog: DialogInterface) {
+        super.onDismiss(dialog)
+    }
     private fun fetchCurrentLocationCoordinates() {
         // Simulating getting coordinates for the current location
         val (lat, lng) = viewModel.getLatAndLong()
@@ -120,17 +127,7 @@ class   DialogAlertFragment : DialogFragment() {
         datePickerDialog.show()
     }
 
-//    private fun showDatePicker() {
-//        DatePickerDialog(
-//            requireContext(),
-//            { _, year, month, dayOfMonth ->
-//                selectedYear = year
-//                selectedMonth = month
-//                selectedDay = dayOfMonth
-//            },
-//            selectedYear,selectedMonth,selectedDay
-//        ).show()
-//    }
+
 
     private fun saveAlertConfig() {
         val alertDate = calendar.time
@@ -186,9 +183,11 @@ class   DialogAlertFragment : DialogFragment() {
             )}
     }
 
+
+
     private fun getLocationName(lat: Double, lng: Double): String {
         return try {
-            val geocoder = Geocoder(requireContext(), Locale.getDefault())
+            val geocoder = Geocoder(requireContext(),Locale("en"))
             val addresses = geocoder.getFromLocation(lat, lng, 1)
             addresses?.firstOrNull()?.locality ?: "Unknown Location"
         } catch (e: Exception) {

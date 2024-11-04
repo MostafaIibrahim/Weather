@@ -11,7 +11,7 @@ class WeatherLocalDataSource internal constructor(
     private val weatherDAO: WeatherDAO,
     private val alarmDAO:AlarmDao,
     private val ioDispatcher: CoroutineDispatcher = Dispatchers.IO
-) {
+) : IWeatherLocalDataSource {
     companion object{
         private var  INSTANCE : WeatherLocalDataSource? = null
         fun getInstance(weatherDAO: WeatherDAO,alarmDAO:AlarmDao):WeatherLocalDataSource{
@@ -21,13 +21,13 @@ class WeatherLocalDataSource internal constructor(
             return INSTANCE as WeatherLocalDataSource
         }
     }
-    fun getAllFavLocations(): Flow<List<WeatherDisplayable>> = weatherDAO.getAllFavLocations()
-    fun getChachedLocation(): Flow<WeatherDisplayable?> = weatherDAO.getCachedLocation()
-    suspend fun deleteLocation(location:WeatherDisplayable){ weatherDAO.deleteLocation(location) }
-    suspend fun addLocation(location: WeatherDisplayable){ weatherDAO.insertLocation(location) }
+    override fun getAllFavLocations(): Flow<List<WeatherDisplayable>> = weatherDAO.getAllFavLocations()
+    override fun getChachedLocation(): Flow<WeatherDisplayable?> = weatherDAO.getCachedLocation()
+    override suspend fun deleteLocation(location:WeatherDisplayable){ weatherDAO.deleteLocation(location) }
+    override suspend fun addLocation(location: WeatherDisplayable){ weatherDAO.insertLocation(location) }
 
-    fun getAllAlarms(): Flow<List<Alarm>> = alarmDAO.getAllAlarms()
-    suspend fun insertAlarm(alarm: Alarm) { alarmDAO.insertAlarm(alarm) }
-    suspend fun updateAlarm(alarm: Alarm) { alarmDAO.updateAlarm(alarm) }
-    suspend fun deleteAlarm(alarm: Alarm) { alarmDAO.deleteAlarm(alarm) }
+    override fun getAllAlarms(): Flow<List<Alarm>> = alarmDAO.getAllAlarms()
+    override suspend fun insertAlarm(alarm: Alarm) { alarmDAO.insertAlarm(alarm) }
+    override suspend fun updateAlarm(alarm: Alarm) { alarmDAO.updateAlarm(alarm) }
+    override suspend fun deleteAlarm(alarm: Alarm) { alarmDAO.deleteAlarm(alarm) }
 }

@@ -4,7 +4,9 @@ import com.example.weather.data.Alarm
 import com.example.weather.data.CurrentWeather
 import com.example.weather.data.ForcastWeather
 import com.example.weather.data.WeatherDisplayable
+import com.example.weather.data.db.IWeatherLocalDataSource
 import com.example.weather.data.db.WeatherLocalDataSource
+import com.example.weather.data.remote_network.IWeatherRemoteDataSource
 import com.example.weather.data.remote_network.WeatherRemoteDataSource
 import com.example.weather.util.SettingsPreferencesHelper
 import kotlinx.coroutines.CoroutineDispatcher
@@ -22,9 +24,9 @@ import kotlinx.coroutines.withContext
  -Inputs: It takes remoteDataSource,localDataSource
  */
 class WeatherRepository(
-    var weatherRemoteDataSource: WeatherRemoteDataSource,
+    var weatherRemoteDataSource: IWeatherRemoteDataSource,
     val settingsPreferences: SettingsPreferencesHelper,
-    val weatherLocalDataSource: WeatherLocalDataSource,
+    val weatherLocalDataSource: IWeatherLocalDataSource,
     private val ioDispatcher: CoroutineDispatcher = Dispatchers.IO
     ) : IWeatherRepository {
 

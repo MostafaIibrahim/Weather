@@ -3,7 +3,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:background="@drawable/gradiant_night_background"
+    android:background="@color/gray"
     android:orientation="vertical"
     android:padding="16dp">
 
@@ -34,18 +34,6 @@
         tools:ignore="RtlCompat" />
 
     <!-- End Duration -->
-    <TextView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="@string/set_date" />
-
-    <Button
-        android:id="@+id/set_date"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:background="@drawable/rounded_background"
-        android:gravity="center_vertical"
-        android:padding="10dp" />
 
     <!-- Notification Options -->
     <TextView

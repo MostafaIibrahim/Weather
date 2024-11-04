@@ -9,9 +9,9 @@ import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.flow
 import java.io.IOException
 
-object WeatherRemoteDataSource {
+object WeatherRemoteDataSource : IWeatherRemoteDataSource {
 
-    suspend fun getForecastWeather(
+    override suspend fun getForecastWeather(
         lat: Double, lon: Double, unit: String, language: String
     ): Flow<ForcastWeather> = flow {
             val response = API.retrofitService.getForcastedWeather(lat, lon, unit, language)
@@ -19,7 +19,7 @@ object WeatherRemoteDataSource {
             emit(response)
     }
 
-    suspend fun getCurrentWeather(lat:Double,lon:Double,unit:String,language:String):Flow<CurrentWeather> = flow{
+    override suspend fun getCurrentWeather(lat:Double, lon:Double, unit:String, language:String):Flow<CurrentWeather> = flow{
         emit(API.retrofitService.getCurretWeather(lat,lon,unit, language ))
     }
 }

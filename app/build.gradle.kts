@@ -46,23 +46,32 @@ dependencies {
     /**
      *  Testing dependencies
      * */
-    // hamcrest
-    testImplementation("org.hamcrest:hamcrest-all:1.3")
-    // Junit
     testImplementation("junit:junit:4.13.2")
-    // Coroutines test dependencies
-    testImplementation("org.jetbrains.kotlinx:kotlinx-coroutines-test:1.5.2")
-    // Robolectric
-    testImplementation("org.robolectric:robolectric:4.12")
-    testImplementation("org.junit.jupiter:junit-jupiter:5.8.1")
+    testImplementation(libs.junit.jupiter)
+    androidTestImplementation("androidx.test.ext:junit:1.1.5")
+    androidTestImplementation("androidx.test.espresso:espresso-core:3.5.1")
 
-    testImplementation("androidx.test.ext:junit-ktx:1.1.5")
-    testImplementation("androidx.test:core-ktx:1.5.0")
-    testImplementation("androidx.arch.core:core-testing:2.2.0")
 
-    // AndroidX Test - Instrumented testing
-    androidTestImplementation("androidx.arch.core:core-testing:2.2.0")
-    androidTestImplementation("org.jetbrains.kotlinx:kotlinx-coroutines-test:1.5.2")
+    androidTestImplementation ("androidx.test.ext:junit:1.1.5") // Check for the latest version
+    androidTestImplementation ("androidx.test.espresso:espresso-core:3.5.1")
+    testImplementation ("org.jetbrains.kotlin:kotlin-test:1.8.0")
+
+    testImplementation("org.hamcrest:hamcrest:2.2")
+    testImplementation("org.hamcrest:hamcrest-library:2.2")
+    androidTestImplementation("org.hamcrest:hamcrest:2.2")
+    androidTestImplementation("org.hamcrest:hamcrest-library:2.2")
+
+    testImplementation ("junit:junit:4.13.2")
+    testImplementation ("org.hamcrest:hamcrest-all:1.3")
+    testImplementation ("androidx.arch.core:core-testing:2.1.0")
+
+    testImplementation ("androidx.test.ext:junit-ktx:1.1.3")
+    testImplementation ("androidx.test:core-ktx:1.5.0")
+    testImplementation ("org.robolectric:robolectric:4.8")
+    implementation("org.jetbrains.kotlinx:kotlinx-coroutines-android:1.7.1")
+    testImplementation("org.jetbrains.kotlinx:kotlinx-coroutines-test:1.7.1")
+    androidTestImplementation("org.jetbrains.kotlinx:kotlinx-coroutines-test:1.7.1")
+
     implementation ("com.airbnb.android:lottie:6.5.2")
     //for map openStreetMap
     implementation ("org.osmdroid:osmdroid-android:6.1.10")
@@ -71,7 +80,8 @@ dependencies {
     implementation ("androidx.lifecycle:lifecycle-livedata-ktx:2.6.0")
     implementation(libs.play.services.location)
     implementation(libs.play.services.maps)
-    implementation(libs.androidx.compose.material.core) //search
+    implementation(libs.androidx.compose.material.core)
+    androidTestImplementation(libs.junit.jupiter) //search
     //Room
     kapt ("androidx.room:room-compiler:2.6.1")
     implementation ("androidx.room:room-runtime:2.6.1")

@@ -6,8 +6,13 @@ import com.example.weather.data.ForcastWeather
 import com.example.weather.data.WeatherDisplayable
 import com.example.weather.data.repository.IWeatherRepository
 import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.MutableStateFlow
 
 class FakeWeatherRepositoryTest: IWeatherRepository{
+    private val favoriteLocations = MutableStateFlow<List<WeatherDisplayable>>(emptyList())
+
+
+
     override suspend fun getDisplayableData(lat: Double, lon: Double): Flow<WeatherDisplayable> {
         TODO("Not yet implemented")
     }
@@ -20,20 +25,22 @@ class FakeWeatherRepositoryTest: IWeatherRepository{
         TODO("Not yet implemented")
     }
 
-    override fun getAllFavLocations(): Flow<List<WeatherDisplayable>> {
-        TODO("Not yet implemented")
-    }
+    override fun getAllFavLocations(): Flow<List<WeatherDisplayable>> = favoriteLocations
 
     override fun getChachedLocation(): Flow<WeatherDisplayable> {
         TODO("Not yet implemented")
     }
 
     override suspend fun addToFav(FavLocation: WeatherDisplayable) {
-        TODO("Not yet implemented")
+        val currentList = favoriteLocations.value.toMutableList()
+        currentList.add(FavLocation)
+        favoriteLocations.value = currentList
     }
 
     override suspend fun deleteFromFav(FavLocation: WeatherDisplayable) {
-        TODO("Not yet implemented")
+        val currentList = favoriteLocations.value.toMutableList()
+        currentList.remove(FavLocation)
+        favoriteLocations.value = currentList
     }
 
     override fun getAllAlarms(): Flow<List<Alarm>> {

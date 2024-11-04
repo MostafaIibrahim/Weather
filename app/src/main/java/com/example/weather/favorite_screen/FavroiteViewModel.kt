@@ -21,7 +21,7 @@ class FavroiteViewModel(val repo: IWeatherRepository):ViewModel() {
     }
 
     fun getAllStoredLocations() = viewModelScope.launch(Dispatchers.IO){
-        repo.getAllFavLocations().catch { println("Error ya walla") }
+        repo.getAllFavLocations().catch { println("Error") }
             .collect{
                 _ListDataFlow.value = it
             }

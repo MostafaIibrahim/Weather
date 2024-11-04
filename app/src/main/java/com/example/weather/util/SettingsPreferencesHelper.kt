@@ -3,7 +3,7 @@ package com.example.weather.util
 import android.content.Context
 import android.content.SharedPreferences
 
-class SettingsPreferencesHelper(context:Context){
+open class SettingsPreferencesHelper(context:Context) : ISettingsPreferencesHelper {
     lateinit var sharedPreferences:SharedPreferences
     companion object {
         const val PREFERENCES_NAME = "weather_preferences"
@@ -18,34 +18,34 @@ class SettingsPreferencesHelper(context:Context){
         sharedPreferences = context.getSharedPreferences(PREFERENCES_NAME,Context.MODE_PRIVATE)
     }
 
-    var latitude: Double
+     var latitude: Double
         get() = sharedPreferences.getFloat(LATITUDE, 0f).toDouble()
         set(value) = sharedPreferences.edit().putFloat(LATITUDE, value.toFloat()).apply()
 
-    var longitude: Double
+     var longitude: Double
         get() = sharedPreferences.getFloat(LONGITUDE, 0f).toDouble()
         set(value) = sharedPreferences.edit().putFloat(LONGITUDE, value.toFloat()).apply()
 
 
 
-    fun saveTempUnit(tempUnit: String) {
+    override fun saveTempUnit(tempUnit: String) {
         sharedPreferences.edit().putString(TEMP_UNIT_KEY, tempUnit).apply()
     }
 
-    fun getTempUnit(): String {
+    override fun getTempUnit(): String {
         return sharedPreferences.getString(TEMP_UNIT_KEY, "metric") ?: "metric"
     }
 
-    fun saveWindSpeedUnit(windUnit: String) {
+    override fun saveWindSpeedUnit(windUnit: String) {
         sharedPreferences.edit().putString(WIND_SPEED_KEY, windUnit).apply()
     }
 
-    fun getWindSpeedUnit(): String {
+    override fun getWindSpeedUnit(): String {
         return sharedPreferences.getString(WIND_SPEED_KEY, "metric") ?: "metric"
     }
-    fun saveLocType(type:String) { sharedPreferences.edit().putString(LOCATION_TYPE,type).apply() }
-    fun getLocType():String? = sharedPreferences.getString(LOCATION_TYPE,"gps")
+    override fun saveLocType(type:String) { sharedPreferences.edit().putString(LOCATION_TYPE,type).apply() }
+    override fun getLocType():String? = sharedPreferences.getString(LOCATION_TYPE,"gps")
 
-    fun saveLang(language:String) { sharedPreferences.edit().putString(LANGUAGE_KEY,language).apply() }
-    fun getLang():String? = sharedPreferences.getString(LANGUAGE_KEY,"en")
+    override fun saveLang(language:String) { sharedPreferences.edit().putString(LANGUAGE_KEY,language).apply() }
+    override fun getLang():String? = sharedPreferences.getString(LANGUAGE_KEY,"en")
 }
