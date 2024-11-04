@@ -27,19 +27,26 @@ import com.example.weather.util.SettingsPreferencesHelper
 import java.util.Calendar
 import java.util.Locale
 import android.Manifest
+import android.annotation.SuppressLint
+import android.widget.Toast
 
 class   DialogAlertFragment : DialogFragment() {
     private lateinit var dialogBinder: FragmentDialogAlertBinding
-    private val calendar = Calendar.getInstance()
-    private lateinit var factory: AlertViewModelFactory
-    private lateinit var viewModel: AlertViewModel
-    private var latitude: Double = 0.0
-    private var longitude: Double = 0.0
+    val calendar = Calendar.getInstance()
+    var selectedYear = calendar.get(Calendar.YEAR)
+    var selectedMonth = calendar.get(Calendar.MONTH)
+    var selectedDay = calendar.get(Calendar.DAY_OF_MONTH)
+    var selectedHour = calendar.get(Calendar.HOUR_OF_DAY)
+    var selectedMinute = calendar.get(Calendar.MINUTE)
+    var time = false
+    private var latitude: Double = 37.7749
+    private var longitude: Double = -122.4194
     private var notificationType: String = "Alarm"
     private var locationName: String = ""
     private val REQUEST_CODE = 505
 
-
+    private lateinit var factory: AlertViewModelFactory
+    private lateinit var viewModel: AlertViewModel
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
@@ -56,17 +63,6 @@ class   DialogAlertFragment : DialogFragment() {
             )
         )
         viewModel = ViewModelProvider(this, factory).get(AlertViewModel::class.java)
-        if (ActivityCompat.checkSelfPermission(
-                requireContext(),
-                Manifest.permission.POST_NOTIFICATIONS
-            ) != PackageManager.PERMISSION_GRANTED
-        ) {
-            ActivityCompat.requestPermissions(
-                requireActivity(),
-                arrayOf(Manifest.permission.POST_NOTIFICATIONS),
-                REQUEST_CODE // Define this constant for your permission request
-            )
-        }
         return dialogBinder.root
     }
 
@@ -74,14 +70,10 @@ class   DialogAlertFragment : DialogFragment() {
         super.onViewCreated(view, savedInstanceState)
         dialogBinder.apply {
             startDuration.setOnClickListener { showTimePicker() }
-            setDate.setOnClickListener { showDatePicker() }
+//            setDate.setOnClickListener { showDatePicker() }
 
             notifyOptions.setOnCheckedChangeListener { _, checkedId ->
-                notificationType = when (checkedId) {
-                    R.id.alarm_config -> "Alarm"
-                    R.id.notification_config -> "Notification"
-                    else -> "Alarm"
-                }
+                notificationType = if (checkedId == R.id.notification_config) "Notification" else "Alarm"
             }
             locationRadioButton.setOnCheckedChangeListener { _, checkedId ->
                 when (checkedId) {
@@ -108,25 +100,37 @@ class   DialogAlertFragment : DialogFragment() {
     }
 
     private fun showTimePicker() {
-        TimePickerDialog(requireContext(), { _, hour, minute ->
-            calendar.set(Calendar.HOUR_OF_DAY, hour)
-            calendar.set(Calendar.MINUTE, minute)
-        }, calendar.get(Calendar.HOUR_OF_DAY), calendar.get(Calendar.MINUTE), true).show()
+        val datePickerDialog = DatePickerDialog(this.requireContext(), { _, year, month, dayOfMonth ->
+            selectedYear = year
+            selectedMonth = month
+            selectedDay = dayOfMonth
+
+            val timePickerDialog = TimePickerDialog(this.requireContext(), { _, hourOfDay, minute ->
+                selectedHour = hourOfDay
+                selectedMinute = minute
+                time = true
+            }, selectedHour, selectedMinute, true)
+            timePickerDialog.setOnCancelListener {
+
+            }
+            timePickerDialog.show()
+
+        }, selectedYear, selectedMonth, selectedDay)
+        datePickerDialog.datePicker.minDate = calendar.timeInMillis
+        datePickerDialog.show()
     }
 
-    private fun showDatePicker() {
-        DatePickerDialog(
-            requireContext(),
-            { _, year, month, dayOfMonth ->
-                calendar.set(Calendar.YEAR, year)
-                calendar.set(Calendar.MONTH, month)
-                calendar.set(Calendar.DAY_OF_MONTH, dayOfMonth)
-            },
-            calendar.get(Calendar.YEAR),
-            calendar.get(Calendar.MONTH),
-            calendar.get(Calendar.DAY_OF_MONTH)
-        ).show()
-    }
+//    private fun showDatePicker() {
+//        DatePickerDialog(
+//            requireContext(),
+//            { _, year, month, dayOfMonth ->
+//                selectedYear = year
+//                selectedMonth = month
+//                selectedDay = dayOfMonth
+//            },
+//            selectedYear,selectedMonth,selectedDay
+//        ).show()
+//    }
 
     private fun saveAlertConfig() {
         val alertDate = calendar.time
@@ -150,23 +154,36 @@ class   DialogAlertFragment : DialogFragment() {
         dismiss()
     }
 
+    @SuppressLint("ScheduleExactAlarm")
     private fun scheduleAlarm(alarm: Alarm) {
         val alarmManager = requireContext().getSystemService(Context.ALARM_SERVICE) as AlarmManager
         val intent = Intent(requireContext(), AlarmReceiver::class.java).apply {
-            putExtra("alarm_id", alarm.id)
+            putExtra("notificationType", alarm.notificationType)
+            putExtra("location", alarm.location)
         }
         val pendingIntent = PendingIntent.getBroadcast(
             requireContext(),
             alarm.id,
             intent,
-            PendingIntent.FLAG_UPDATE_CURRENT
+            PendingIntent.FLAG_UPDATE_CURRENT or PendingIntent.FLAG_IMMUTABLE
         )
-
-        alarmManager.setExact(
-            AlarmManager.RTC_WAKEUP,
-            alarm.alertDate.time,
-            pendingIntent
-        )
+        calendar.apply {
+            set(Calendar.YEAR, selectedYear)
+            set(Calendar.MONTH, selectedMonth) // Note: Month is 0-based (0 = January, 11 = December)
+            set(Calendar.DAY_OF_MONTH, selectedDay)
+            set(Calendar.HOUR_OF_DAY, selectedHour)
+            set(Calendar.MINUTE, selectedMinute)
+            set(Calendar.SECOND, 0)}
+        if (calendar.timeInMillis < System.currentTimeMillis()) {
+            Toast.makeText(requireContext(), "can not set alarm for past time ", Toast.LENGTH_SHORT).show()
+        }
+        else {
+            // Set the alarm for a one-time trigger
+            alarmManager.set(
+                AlarmManager.RTC_WAKEUP,
+                calendar.timeInMillis,
+                pendingIntent
+            )}
     }
 
     private fun getLocationName(lat: Double, lng: Double): String {

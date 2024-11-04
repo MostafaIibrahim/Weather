@@ -6,11 +6,14 @@ import android.app.PendingIntent
 import android.app.TimePickerDialog
 import android.content.Context
 import android.content.Intent
+import android.content.pm.PackageManager
+import android.os.Build
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.TextView
+import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat.getSystemService
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
@@ -56,9 +59,30 @@ class AlertFragment : Fragment() {
     }
     private fun fabListener(){
         alartBinder.floatingActionButton.setOnClickListener{
-            DialogAlertFragment().show(parentFragmentManager, "DialogAlertFragment")
+            if (checkOverApplicationPermissions()){
+                DialogAlertFragment().show(childFragmentManager, "DialogAlertFragment")
+            }else{
+                enableOverOtherAppService()
+                if (checkOverApplicationPermissions()) {
+                    DialogAlertFragment().show(childFragmentManager, "DialogAlertFragment")
+                }
+            }
+
         }
     }
 
+    fun checkOverApplicationPermissions(): Boolean {
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) { // Android 13 (API 33) and above
+            return requireActivity().checkSelfPermission(android.Manifest.permission.POST_NOTIFICATIONS) == PackageManager.PERMISSION_GRANTED
+        }
+        // For devices running lower than Android 13, permission is not required
+        return true
+    }
+
+    fun enableOverOtherAppService() {
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) { // Only request on Android 13 and above
+            ActivityCompat.requestPermissions(requireActivity(), arrayOf(android.Manifest.permission.POST_NOTIFICATIONS), 2)
+        }
+    }
 }
 

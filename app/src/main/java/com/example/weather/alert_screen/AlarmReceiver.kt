@@ -19,6 +19,7 @@ import com.example.weather.R
 class AlarmReceiver : BroadcastReceiver() {
 
     override fun onReceive(context: Context, intent: Intent) {
+        println("I am here in on recieve")
         val notificationType = intent.getStringExtra("notificationType") ?: "Alarm"
         val location = intent.getStringExtra("location") ?: "Unknown Location"
 
